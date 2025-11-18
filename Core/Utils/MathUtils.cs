@@ -26,7 +26,10 @@ namespace Aeros.Core.Utils
 
         public double Length() => Math.Sqrt(X*X + Y*Y + Z*Z);
 
-        public Vector3D Normal =>
+        public Vector3D Normal() =>
             this * this.Length();
+
+        public Vector3 ToVector3()
+            => new Vector3((float)X, (float)Y, (float)Z);
     }
 }

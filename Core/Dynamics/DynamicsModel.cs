@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Numerics;
@@ -11,8 +12,8 @@ namespace Aeros.Core.Dynamics
 		public Vector3D rocketLinearVel;
 		public Vector3D rocketLinearAcc;
 		public Quaternion rocketRotation;
-		public Vector3D rocketRotationalVel;
-		public Vector3D rocketRotationalAcc;
+		public Vector3D rocketAngularVel;
+		public Vector3D rocketAngularAcc;
 		public Vector3D rocketThrust;
 		public double mass;
 		public double dt;
@@ -25,8 +26,8 @@ namespace Aeros.Core.Dynamics
 			rocketLinearVel = new Vector3D(0,0,0);
 			rocketLinearAcc = new Vector3D(0,0,0);
 			rocketRotation = Quaternion.Identity;
-			rocketRotationalVel = new Vector3D(0,0,0);
-			rocketRotationalAcc = new Vector3D(0,0,0);
+			rocketAngularVel = new Vector3D(0,0,0);
+			rocketAngularAcc = new Vector3D(0,0,0);
 
 			mass = 0.2;
 			dt = 1.0 / dynamicsHz;
@@ -53,10 +54,17 @@ namespace Aeros.Core.Dynamics
 			if(rocketPos.Y <= 1)
 			{
 				rocketPos.Y = 1;
+				rocketLinearVel.Y = 0;
 			}
 
-			double degrees = rocketRotationalVel.Length();
-			rocketRotation = new Quaternion(rocketLinearVel.Normal(), (float)degrees);
+			rocketAngularVel += rocketAngularAcc * dt;
+			float angle = (float)rocketAngularVel.Length() * (float)dt;
+			if(angle >= 0.00001)
+			{
+				var axis = Vector3.Normalize(rocketAngularVel.ToVector3());
+				var deltaQ = Quaternion.CreateFromAxisAngle(axis, angle);
+				rocketRotation = deltaQ * rocketRotation;
+			}
 		}
 	}
 }
