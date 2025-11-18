@@ -10,6 +10,9 @@ namespace Aeros.Core.Dynamics
 		public Vector3D rocketPos;
 		public Vector3D rocketLinearVel;
 		public Vector3D rocketLinearAcc;
+		public Quaternion rocketRotation;
+		public Vector3D rocketRotationalVel;
+		public Vector3D rocketRotationalAcc;
 		public Vector3D rocketThrust;
 		public double mass;
 		public double dt;
@@ -21,6 +24,10 @@ namespace Aeros.Core.Dynamics
 			rocketPos = new Vector3D(0,1,0);
 			rocketLinearVel = new Vector3D(0,0,0);
 			rocketLinearAcc = new Vector3D(0,0,0);
+			rocketRotation = Quaternion.Identity;
+			rocketRotationalVel = new Vector3D(0,0,0);
+			rocketRotationalAcc = new Vector3D(0,0,0);
+
 			mass = 0.2;
 			dt = 1.0 / dynamicsHz;
 		}
@@ -44,9 +51,12 @@ namespace Aeros.Core.Dynamics
 			Logs.Add("Pos: " + rocketPos.Y);
 
 			if(rocketPos.Y <= 1)
-            {
-                rocketPos.Y = 1;
-            }
+			{
+				rocketPos.Y = 1;
+			}
+
+			double degrees = rocketRotationalVel.Length();
+			rocketRotation = new Quaternion(rocketLinearVel.Normal(), (float)degrees);
 		}
 	}
 }

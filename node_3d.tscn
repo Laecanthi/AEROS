@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://utahwh0y1pkb"]
+[gd_scene load_steps=6 format=3 uid="uid://utahwh0y1pkb"]
 
 [ext_resource type="Script" uid="uid://d00xihuy37mdl" path="res://GodotAdapter/SimulationRunner.cs" id="1_a202f"]
 [ext_resource type="Script" uid="uid://dvy3wgga2v552" path="res://GodotAdapter/VisualLayer.cs" id="2_noarx"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_a202f"]
+
+[sub_resource type="Environment" id="Environment_noarx"]
+background_mode = 2
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_noarx"]
 
@@ -18,6 +21,7 @@ script = ExtResource("2_noarx")
 
 [node name="Camera3D" type="Camera3D" parent="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6949768, 19.061598)
+environment = SubResource("Environment_noarx")
 current = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

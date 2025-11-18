@@ -1,4 +1,5 @@
 using System;
+using System.Numerics;
 
 namespace Aeros.Core.Utils
 {
@@ -24,5 +25,8 @@ namespace Aeros.Core.Utils
             => new Vector3D(a.X / k, a.Y / k, a.Z / k);
 
         public double Length() => Math.Sqrt(X*X + Y*Y + Z*Z);
+
+        public Vector3D Normal =>
+            this * this.Length();
     }
 }
