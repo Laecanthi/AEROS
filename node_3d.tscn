@@ -1,6 +1,28 @@
-[gd_scene load_steps=2 format=3 uid="uid://utahwh0y1pkb"]
+[gd_scene load_steps=5 format=3 uid="uid://utahwh0y1pkb"]
 
-[ext_resource type="Script" uid="uid://p4ee43dswoyg" path="res://NewScript.cs" id="1_a202f"]
+[ext_resource type="Script" uid="uid://d00xihuy37mdl" path="res://GodotAdapter/SimulationRunner.cs" id="1_a202f"]
+[ext_resource type="Script" uid="uid://dvy3wgga2v552" path="res://GodotAdapter/VisualLayer.cs" id="2_noarx"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_a202f"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_noarx"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_a202f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.02622807)
+mesh = SubResource("CylinderMesh_a202f")
+skeleton = NodePath("Camera3D")
+script = ExtResource("2_noarx")
+
+[node name="Camera3D" type="Camera3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6949768, 19.061598)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.98006725, 0.022331223, -0.19740765, 0.18338175, 0.28052294, 0.9421666, 0.076417096, -0.9595875, 0.27083617, 0, 3.1074216, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(200, 0, 0, 0, 200, 0, 0, 0, 200, 0, 0, 0)
+mesh = SubResource("PlaneMesh_noarx")

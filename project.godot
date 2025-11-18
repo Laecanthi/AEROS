@@ -16,6 +16,10 @@ run/main_scene="uid://utahwh0y1pkb"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SimulationRunner="*res://GodotAdapter/SimulationRunner.cs"
+
 [dotnet]
 
 project/assembly_name="AEROS"

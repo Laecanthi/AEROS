@@ -1,0 +1,28 @@
+using System;
+
+namespace Aeros.Core.Utils
+{
+    public struct Vector3D
+    {
+        public double X, Y, Z;
+
+        public Vector3D(double x, double y, double z)
+        {
+            X = x; Y = y; Z = z;
+        }
+
+        public static Vector3D operator +(Vector3D a, Vector3D b)
+            => new Vector3D(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+
+        public static Vector3D operator -(Vector3D a, Vector3D b)
+            => new Vector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+
+        public static Vector3D operator *(Vector3D a, double k)
+            => new Vector3D(a.X * k, a.Y * k, a.Z * k);
+
+        public static Vector3D operator /(Vector3D a, double k)
+            => new Vector3D(a.X / k, a.Y / k, a.Z / k);
+
+        public double Length() => Math.Sqrt(X*X + Y*Y + Z*Z);
+    }
+}
