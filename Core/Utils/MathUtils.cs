@@ -12,6 +12,13 @@ namespace Aeros.Core.Utils
             X = x; Y = y; Z = z;
         }
 
+        public Vector3D(Vector3 vector)
+        {
+            X = vector.X;
+            Y = vector.Y;
+            Z = vector.Z;
+        }
+
         public static Vector3D operator +(Vector3D a, Vector3D b)
             => new Vector3D(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
 
@@ -31,5 +38,8 @@ namespace Aeros.Core.Utils
 
         public Vector3 ToVector3()
             => new Vector3((float)X, (float)Y, (float)Z);
+
+        public Vector3D Squared()
+            => new Vector3D(X*X, Y*Y, Z*Z);
     }
 }
