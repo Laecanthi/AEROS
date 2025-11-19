@@ -25,13 +25,15 @@ namespace Aeros.Core.Dynamics
 		public DynamicsModel(int dynamicsHz)
 		{
 			rocketPos = new Vector3D(0,1,0);
-			rocketLinearVel = new Vector3D(5,25,0);
+			rocketLinearVel = new Vector3D(-0.1,0.1,-0.05);
 			rocketLinearAcc = new Vector3D(0,0,0);
 			centerOfMass=  new Vector3D(0,0,0);
 			centerOfPressure =  new Vector3D(0,-1,0);
 			rocketRotation = Quaternion.Identity;
-			rocketAngularVel = new Vector3D(0,0,0);
+			rocketAngularVel = new Vector3D(0.05,-0.0,0.1);
 			rocketAngularAcc = new Vector3D(0,0,0);
+
+			//rocketRotation = Quaternion.CreateFromAxisAngle(new Vector3(0, 0, -1), (float)Math.PI / 2);
 
 			mass = 0.2;
 			dt = 1.0 / dynamicsHz;
@@ -48,13 +50,14 @@ namespace Aeros.Core.Dynamics
 			{
 				rocketThrust = new Vector3D(0,0,0);
 			}
-			//rocketLinearAcc = rocketThrust/mass + new Vector3D(0,-9.8, 0);
-			rocketLinearAcc = new Vector3D(0,-9.8, 0);
+			rocketLinearAcc = ApplyQuaternion(rocketThrust, rocketRotation)/mass + new Vector3D(0,-9.8, 0);
+			rocketLinearAcc += rocketLinearVel * 0.05 * -1;
+			//rocketLinearAcc = new Vector3D(0,-9.8, 0);
 			rocketLinearVel += rocketLinearAcc * dt;
 			rocketPos += rocketLinearVel * dt;
 
-			//Logs.Add("Vel: " + rocketLinearVel.Y);
-			//Logs.Add("Pos: " + rocketPos.Y);
+			//Logs.Add("Vel: " + rocketLinearVel.X);
+			//Logs.Add("Pos: " + rocketPos.X);
 
 			if(rocketPos.Y <= 1)
 			{
@@ -62,7 +65,15 @@ namespace Aeros.Core.Dynamics
 				rocketLinearVel.Y = 0;
 			}
 
-			ApplyTorque(ApplyQuaternion(centerOfMass, rocketRotation), ApplyQuaternion(centerOfPressure, rocketRotation), rocketLinearVel * 0.05 * -1);
+			Vector3D cop_world = ApplyQuaternion(centerOfPressure, rocketRotation);
+			Vector3D com_world = ApplyQuaternion(centerOfMass, rocketRotation);
+
+			rocketAngularAcc = new Vector3D(0,0,0);
+
+			Vector3D r = cop_world - com_world;
+
+			Vector3D centerOfPressureRelativeLinearVelocity = new Vector3D(Vector3.Cross(rocketAngularVel.ToVector3(), r.ToVector3()));
+			ApplyTorque(ApplyQuaternion(centerOfMass, rocketRotation), ApplyQuaternion(centerOfPressure, rocketRotation), (rocketLinearVel + centerOfPressureRelativeLinearVelocity) * 0.05 * -1);
 
 			rocketAngularVel += rocketAngularAcc * dt;
 			float angle = (float)rocketAngularVel.Length() * (float)dt;
@@ -77,9 +88,9 @@ namespace Aeros.Core.Dynamics
 		public void ApplyTorque(Vector3D pivot, Vector3D application, Vector3D force)
 		{
 			Vector3D distanceVector = application - pivot;
-			Vector3 crossProduct = Vector3.Cross(force.ToVector3(), distanceVector.ToVector3());
-			Logs.Add(crossProduct.ToString());
-			rocketAngularAcc += new Vector3D(crossProduct) * mass;
+			Vector3 crossProduct = Vector3.Cross(distanceVector.ToVector3(), force.ToVector3());
+			//Logs.Add(crossProduct.ToString());
+			rocketAngularAcc += new Vector3D(crossProduct) / mass;
 		}
 
 		public Vector3D ApplyQuaternion(Vector3D vector, Quaternion quaternion)
